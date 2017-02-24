@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Danbooru</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+</head>
+<body>
+  <div id="main">
+    <a id="link" href="" target="_blank"></a>
+  </div>
+  <style>
+    html, body, #main {
+      width: 100%; height: 100%; position: relative; padding: 0; margin: 0; background-color: black; text-align: center;
+    }
+    #main { background-size: contain; background-repeat: no-repeat; background-position: center; }
+    a { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+  </style>
+  <script>
+    $().ready(function() {
+      $.ajax({
+        url: 'https://danbooru.donmai.us/posts.json',
+        data: {
+          limit: 200,
+          tags: 'Hatsune_Miku',
+          random: true,
+          rating: 's'
+        },
+        success: function(posts) {
+          var BASE_URL = 'https://danbooru.donmai.us';
+	  var PIXIV_MEMBER_ILLUST_PATH = 'http://www.pixiv.net/member_illust.php?mode=medium&illust_id=';
+          var pointer = 0;
+          setInterval(function() {
+            if (pointer == 199) { window.reload(); }
+            $('#main').css('background-image', 'url(' + BASE_URL + posts[pointer].file_url + ')');
+            $('#link').attr('href', PIXIV_MEMBER_ILLUST_PATH + posts[pointer].pixiv_id);
+            pointer++;
+          }, 10000);
+        },
+        error: function(error) {
+          console.log(error);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
